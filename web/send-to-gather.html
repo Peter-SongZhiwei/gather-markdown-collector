@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#f7f7f4">
+  <title>Send to Gather · iPhone setup</title>
+  <link rel="icon" href="./icon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="./styles.css">
+  <style>
+    .setup{max-width:760px;margin:0 auto;padding:28px 20px 70px}.setup h1{font-size:clamp(30px,6vw,44px);line-height:1.15;letter-spacing:-1.6px;margin:22px 0 14px}.setup p{line-height:1.65;color:#65706a}.setup section{padding:24px;margin:22px 0;border:1px solid #e2e6df;border-radius:20px;background:#fff}.setup h2{font-size:21px;margin:0 0 14px}.setup li{padding:6px 0;line-height:1.65}.setup ol{padding-left:22px}.setup code{font-size:.94em;background:#f1f3ee;border-radius:5px;padding:3px 6px;overflow-wrap:anywhere}.setup a{color:#276557}.setup .primary-button{color:#fff;text-decoration:none;display:inline-flex;justify-content:center;padding:12px 18px}.setup .secondary{margin-left:12px;display:inline-block}.setup .steps-table{overflow-x:auto}.setup table{border-collapse:collapse;width:100%;line-height:1.6}.setup th,.setup td{text-align:left;padding:12px 8px;border-bottom:1px solid #eceee8;vertical-align:top}.setup .variable{background:#eaf1fc;color:#275ba0;border-radius:6px;padding:3px 5px;white-space:nowrap}.setup .note{font-size:14px}.setup .flow-note{padding:16px 20px;background:#edf3ee;border-radius:14px;color:#294d42}.setup .back{font-size:14px;text-decoration:none}.setup details{line-height:1.65}.setup summary{cursor:pointer;font-weight:600}
+  </style>
+</head>
+<body>
+<main class="setup">
+  <a class="back" href="./">← Back to Gather</a>
+  <h1>One share. Your answer, gathered.</h1>
+  <p>Set this up once on your iPhone. Then share a ChatGPT answer to a shortcut: Safari opens briefly, and Gather receives the Markdown automatically.</p>
+  <p class="flow-note"><b>ChatGPT Share → Gather Auto → choose your blocks.</b><br>No second Share menu. No clipboard or Paste step.</p>
+
+  <section>
+    <h2>1. Install Userscripts</h2>
+    <a class="primary-button" href="https://apps.apple.com/us/app/userscripts/id1463298887">Get Userscripts</a>
+    <ol>
+      <li>Open Userscripts once. Keep its default script folder.</li>
+      <li>Enable <b>Userscripts</b> in <b>Settings → Apps → Safari → Extensions</b>.</li>
+      <li>Open <a href="https://chatgpt.com">chatgpt.com</a> in Safari. In the page menu → Extensions → Userscripts, allow it on this website. Do the same for <a href="./">Gather</a>.</li>
+    </ol>
+    <p class="note">Open Gather in Safari and sign in before your first transfer. Safari must be the browser your shortcut opens.</p>
+  </section>
+
+  <section>
+    <h2>2. Install Gather Auto</h2>
+    <p>Open this script <b>in Safari</b>, then open Safari’s page menu → Extensions → <b>Userscripts → Install</b>.</p>
+    <a class="primary-button" href="./gather-auto.user.js">Open Gather Auto script</a>
+    <a class="secondary" href="./gather-auto.user.js" download="gather-auto.user.js">Download instead</a>
+    <p class="note">If no install prompt appears, download <b>gather-auto.user.js</b> and move it into the script folder shown by the Userscripts app. Then open the Userscripts extension menu once so it detects the file.</p>
+  </section>
+
+  <section>
+    <h2>3. Create a shortcut: Gather Auto</h2>
+    <p>In Shortcuts, create a new shortcut called <b>Gather Auto</b>. Enable <b>Show in Share Sheet</b> and accept <b>URLs</b> and <b>Text</b>.</p>
+    <p>Add these actions in order:</p>
+    <div class="steps-table"><table>
+      <thead><tr><th>Action</th><th>Input</th></tr></thead>
+      <tbody>
+        <tr><td>Get URLs from Input</td><td><span class="variable">Shortcut Input</span></td></tr>
+        <tr><td>Get Item from List</td><td><b>First Item</b> from <span class="variable">URLs</span></td></tr>
+        <tr><td>URL</td><td><code>x-safari-</code><span class="variable">Item from List</span><code>#gather-auto</code></td></tr>
+        <tr><td>Open URLs</td><td><span class="variable">URL</span> from the preceding action</td></tr>
+      </tbody>
+    </table></div>
+    <p class="note">Blue labels above are variables: select them from an earlier action’s output. In the URL action, type <code>x-safari-</code>, insert the blue <b>Item from List</b> variable, then type <code>#gather-auto</code>. Do not add spaces. The result should look like <code>x-safari-https://chatgpt.com/s/…#gather-auto</code>.</p>
+    <p class="note">The <code>x-safari-</code> prefix requests Safari explicitly. An ordinary HTTPS link may open back inside the ChatGPT app, where Userscripts cannot run. If iOS asks to open Safari, allow it.</p>
+    <p class="note">Keep your original <b>Send to Gather</b> shortcut as a fallback. This new shortcut has no Run JavaScript on Webpage action.</p>
+  </section>
+
+  <section>
+    <h2>Try it</h2>
+    <p>In ChatGPT, share an answer and choose <b>Gather Auto</b>. Wait for the answer to load in Safari. Gather should open in Select blocks mode, ready to tap.</p>
+    <p>If you already had a draft, <b>Undo import</b> restores it and its selections until another edit or reload.</p>
+    <details><summary>If it stops along the way</summary>
+      <ul>
+        <li><b>Safari opens, then nothing:</b> confirm the address ends with <code>#gather-auto</code>, and Userscripts is enabled and allowed on chatgpt.com.</li>
+        <li><b>Gather opens but no answer:</b> allow Userscripts on Gather too. Reload the page while its <code>#gather-transfer=…</code> fragment remains.</li>
+        <li><b>A sign-in or page check appears:</b> finish it manually, then use Retry if shown. If the fragment was lost, share the answer again.</li>
+        <li><b>The ChatGPT app or another browser opens:</b> check that the URL action starts with the literal <code>x-safari-</code> before the blue Item from List variable. Its output must go directly to Open URLs; do not extract HTTPS links from it again.</li>
+      </ul>
+    </details>
+    <p class="note">Gather Auto reads the last displayed answer. Only links marked by your shortcut trigger sending. The text passes through local extension storage and is removed after a successful handoff; it is not placed in the URL or sent to an extraction service. Unfinished transfers expire after one hour.</p>
+    <p class="note">This is an experimental iPhone workflow. Initial extension permissions and sign-in may need your taps.</p>
+  </section>
+</main>
+</body>
+</html>

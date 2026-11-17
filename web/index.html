@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#f7f7f4">
+  <meta name="description" content="Paste an AI answer. Tap the useful blocks. Keep a clean Markdown note.">
+  <title>Gather · Markdown Collector</title>
+  <link rel="icon" href="./icon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="./styles.css">
+  <script type="module" src="./app.js"></script>
+</head>
+<body>
+  <header class="app-header">
+    <a href="./" class="brand" aria-label="Gather home"><span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M7 4.5h10v15l-5-3.5-5 3.5z"/><path d="M4 4.5v13M20 4.5v13"/></svg></span><span>gather<span class="brand-dot">.</span></span><span class="brand-description">Markdown collector</span></a>
+    <div class="header-actions"><span id="save-status" class="save-status" role="status"><span></span>Saved on this device</span><button id="help-button" class="icon-button" aria-label="How to use Gather"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 0 1 5 .5c0 1.8-2.5 2-2.5 3.5M12 16.7v.1"/></svg></button></div>
+  </header>
+
+  <main class="app-shell">
+    <section class="intro"><div><div class="eyebrow">A LITTLE LESS COPYING. A LITTLE MORE KEEPING.</div><h1>Keep the parts that matter.</h1><p>Turn a long answer into a note worth coming back to.</p></div><div class="flow" aria-label="Paste, select, copy"><span><b>1</b> Paste</span><i>→</i><span><b>2</b> Select</span><i>→</i><span><b>3</b> Copy</span></div></section>
+
+    <nav class="mobile-tabs" aria-label="Workspace"><button id="select-tab" class="active" aria-pressed="true">Select blocks</button><button id="collection-tab" aria-pressed="false">Collection <span class="count-badge" id="tab-count">0</span></button></nav>
+
+    <div class="workspace" id="workspace" data-mobile-view="select">
+      <section class="source-panel panel" aria-label="Source answer">
+        <div class="panel-heading"><div><span class="panel-kicker">YOUR SOURCE</span><h2 id="source-heading">Start with an answer</h2></div><div class="source-heading-actions"><button id="undo-clear-source" class="text-button" hidden>Undo clear</button><button id="clear-source" class="text-button" disabled>Clear source</button></div></div>
+        <div class="source-mode-bar"><div class="view-switch source-mode-switch" role="group" aria-label="Source mode"><button id="edit-mode-button" class="active" aria-pressed="true" aria-controls="input-view">Edit</button><button id="select-mode-button" aria-pressed="false" aria-controls="blocks-view" disabled>Select blocks</button></div><span id="source-mode-hint">Paste or edit, then switch to Select blocks.</span></div>
+
+        <div id="input-view" class="input-view">
+          <div class="input-label"><label for="source-input">Paste Markdown or plain text</label><button id="paste-button" class="small-button"><svg viewBox="0 0 24 24"><rect x="5" y="5" width="14" height="16" rx="2"/><path d="M9 5V3h6v2M9 11h6M9 15h5"/></svg>Paste</button></div>
+          <textarea id="source-input" spellcheck="false" placeholder="Paste an answer here…&#10;&#10;# Headings, **bold**, and links&#10;- Lists and nested details&#10;- Tables and code blocks&#10;&#10;Everything has a place." aria-describedby="input-hint"></textarea>
+          <div class="input-footer"><span id="input-count">0 characters</span><span>Markdown &amp; plain text</span></div>
+          <div class="input-actions"><button id="example-button" class="text-button">Try an example</button></div>
+          <p id="input-hint" class="source-tip"><svg viewBox="0 0 24 24"><path d="M9 18h6m-5 3h4M8 14a6 6 0 1 1 8 0c-1 1-1 2-1 2H9s0-1-1-2Z"/></svg><span>Paste from your Safari shortcut, or <a href="./send-to-gather.html">set up automatic sending</a>.</span></p>
+        </div>
+
+        <div id="blocks-view" hidden>
+          <div class="selection-toolbar"><span id="block-count">0 blocks · tap to collect</span><div><button id="select-all" class="text-button">Select all</button><span class="toolbar-divider"></span><button id="clear-selection" class="text-button" disabled>Clear</button><button id="undo-button" class="icon-button" aria-label="Undo last selection change" disabled><svg viewBox="0 0 24 24"><path d="M8 5 3 10l5 5M3 10h10a7 7 0 0 1 7 7"/></svg></button></div></div>
+          <div class="blocks-list" id="blocks-list"></div>
+          <div class="source-end"><span>That’s the whole answer.</span></div>
+        </div>
+      </section>
+
+      <aside class="collection-panel panel" aria-label="Your collection">
+        <div class="panel-heading"><div><span class="panel-kicker">JUST THE GOOD PARTS</span><h2>Your collection <span class="heading-count" id="heading-count">0</span></h2></div><span class="collection-mark" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M7 4h10v16l-5-3.5L7 20z"/></svg></span></div>
+        <div id="collection-empty" class="collection-empty"><div class="empty-art" aria-hidden="true"><div class="paper paper-back"></div><div class="paper paper-front"><span></span><span></span><span></span><svg viewBox="0 0 24 24"><path d="m6 12 4 4 8-9"/></svg></div><i class="spark spark-one">✦</i><i class="spark spark-two">+</i></div><h3>A little space for good ideas.</h3><p>Tap the blocks you want to keep.<br>They’ll come together right here.</p><span class="empty-caption">Your words. Your order. Your note.</span></div>
+
+        <div id="collection-filled" hidden>
+          <div class="collection-meta"><span id="collection-stats">0 blocks</span><span class="original-order"><svg viewBox="0 0 24 24"><path d="M8 5v14m-4-4 4 4 4-4M14 5h6m-6 5h4m-4 5h2"/></svg>Original order</span></div>
+          <div class="collection-controls"><div class="view-switch" role="group" aria-label="Collection display"><button id="preview-button" aria-pressed="true" class="active">Preview</button><button id="markdown-button" aria-pressed="false">Markdown</button></div><button id="review-selection" class="text-button">Edit selection</button></div>
+          <div id="collection-preview" class="markdown-body collection-preview"></div>
+          <textarea id="collection-markdown" class="collection-markdown" readonly aria-label="Collected Markdown" spellcheck="false" hidden></textarea>
+        </div>
+
+        <div class="export-area" id="export-area"><button id="copy-button" class="primary-button copy-button" disabled><svg viewBox="0 0 24 24"><rect x="8" y="8" width="12" height="13" rx="2"/><path d="M15 8V3H3v13h5"/></svg><span>Copy Markdown</span></button><div class="secondary-export"><button id="download-button" class="text-button" disabled><svg viewBox="0 0 24 24"><path d="M12 3v12m-4-4 4 4 4-4M4 17v4h16v-4"/></svg>Download .md</button><span>·</span><button id="copy-text-button" class="text-button" disabled>Copy plain text</button></div><p>Formatting stays with your note.</p></div>
+      </aside>
+    </div>
+
+    <footer class="app-footer"><span>Made for the ideas you want to keep.</span><span>Saved in this browser <i>·</i> v1.3</span></footer>
+  </main>
+
+  <div class="mobile-bottom-bar" id="mobile-bottom-bar" hidden><div><strong id="bottom-count">0 blocks</strong><span>selected for your note</span></div><button id="review-button" class="primary-button">Review <svg viewBox="0 0 24 24"><path d="M5 12h14m-5-5 5 5-5 5"/></svg></button></div>
+  <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+
+  <dialog id="help-dialog"><div class="dialog-heading"><span class="panel-kicker">A NOTE, IN A FEW TAPS</span><button id="close-help" class="icon-button" aria-label="Close help">×</button></div><h2>From a long answer<br>to your own little collection.</h2><ol class="help-steps"><li><b>Paste an answer in Edit mode.</b><span>Paste Markdown or plain text, then switch to Select blocks. Switch back to Edit whenever you want to change the source.</span></li><li><b>Tap the good parts.</b><span>Each paragraph and list item is a block. Nested lists stay with their parent; tables and code stay whole.</span></li><li><b>Review, then copy.</b><span>Your picks keep their original order. Copy Markdown into Obsidian or download a .md file.</span></li></ol><p class="help-note">Your draft stays in this browser. Switching to Select blocks applies your edits and keeps picks for unchanged blocks. Clear source removes the answer and its selections; Undo clear restores them until you start a new answer.</p><button id="got-it" class="primary-button">Got it <svg viewBox="0 0 24 24"><path d="m5 12 4 4 10-10"/></svg></button></dialog>
+  <dialog id="copy-dialog"><div class="dialog-heading"><span class="panel-kicker">YOUR NOTE IS READY</span><button id="close-copy" class="icon-button" aria-label="Close copy dialog">×</button></div><h2>Copy your note</h2><p>Automatic copying isn’t available here. Select and copy the text below.</p><textarea id="manual-copy" readonly aria-label="Note to copy" spellcheck="false"></textarea><button id="select-copy-text" class="primary-button">Select all text</button></dialog>
+</body>
+</html>
